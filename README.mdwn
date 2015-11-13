@@ -1,0 +1,13 @@
+# debian-reproducible-helper
+
+This is a set of scripts which I've been using to automatically reproduce the results of [[https://reproducible.debian.net/]]. The goal is to see if I can build bit-for-bit copies of Debian's packages.
+
+
+1) Install pbuilder. For this to work, I've found that version 0.219 of pbuilder is required, which is available in debian unstable (at the time of writing)
+1) Copy pbuilderrc to /root/.pbuilderrc.
+2) sudo ./packagebuilder <package name>
+
+For the package name, use one of the packages listed at https://reproducible.debian.net/unstable/amd64/index_all_abc.html (preferably, one of the ones that is marked as reproducible)
+
+
+

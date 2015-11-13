@@ -1,0 +1,4 @@
+APTGETOPT=(-o Acquire::Check-Valid-Until=false)
+APTCACHE=/var/aptcache
+BASETGZ=/var/cache/pbuilder/base-reproducible.tgz
+
