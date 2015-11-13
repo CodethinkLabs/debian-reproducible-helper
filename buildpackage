@@ -19,6 +19,7 @@ cd reproducible
 
 # Figure out how debian built it.
 apt-get source --download-only $PACKAGE # But wait, what if they haven't built that version?
+
 VERSION=`ls ${PACKAGE}_*.dsc | sed -e s/$PACKAGE\_// -e s/.dsc$//`
 wget https://reproducible.debian.net/buildinfo/unstable/amd64/${PACKAGE}_${VERSION}_${ARCH}.buildinfo -O ${PACKAGE}_${VERSION}_${ARCH}.buildinfo
 wget https://reproducible.debian.net/rb-pkg/unstable/${ARCH}/${PACKAGE}.html -O ${PACKAGE}.html
@@ -32,7 +33,11 @@ sed -e 's/^ //' -e 's/ (= /=/' -e 's/),\?$//' ${PACKAGE}_${VERSION}_${ARCH}.buil
 # Try and extract the build time somehow...
 
 # Create a pbuilder world.
-sudo pbuilder create --mirror http://snapshot.debian.org/archive/debian/20151111T024000Z/ --distribution sid --debootstrapopts "--keyring=/usr/share/keyrings/debian-archive-keyring.gpg"
+SNAPSHOTURL=http://snapshot.debian.org/archive/debian/${BUILDTIME}/
+
+echo "Using the snapshot $SNAPSHOTURL"
+
+sudo pbuilder create --basetgz /var/cache/pbuilder/base.tgz --mirror $SNAPSHOTURL --distribution sid --debootstrapopts "--keyring=/usr/share/keyrings/debian-archive-keyring.gpg"
 
 sudo cp /var/cache/pbuilder/base.tgz /var/cache/pbuilder/base-reproducible.tgz
 
