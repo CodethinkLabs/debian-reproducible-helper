@@ -55,9 +55,9 @@ sudo pbuilder --execute --save-after-exec --basetgz /var/cache/pbuilder/base-rep
 # Do the actual build
 #echo "Press enter to build..."; read
 
-sudo DEB_BUILD_OPTIONS=nocheck pbuilder --build --debbuildopts '-b' --basetgz /var/cache/pbuilder/base-reproducible.tgz $PACKAGE_*.dsc
+sudo DEB_BUILD_OPTIONS=nocheck pbuilder --build --debbuildopts '-b' --basetgz /var/cache/pbuilder/base-reproducible.tgz ${PACKAGE}_*.dsc
 mkdir -p temp
-dcmd cp /var/cache/pbuilder/result/$PACKAGE_*.changes temp; 
+dcmd cp /var/cache/pbuilder/result/${PACKAGE}_*.changes temp; 
 
 echo "Comparing buildinfo files. Any output after this line is an error!"
 
