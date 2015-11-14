@@ -27,7 +27,7 @@ wget https://reproducible.debian.net/rb-pkg/unstable/${ARCH}/${PACKAGE}.html -O 
 BUILDTIME=`grep "span class=\"build-time\"" ${PACKAGE}.html | sed -e 's/^.*>at //' -e 's/<.*$//' -e 's/-//g' -e 's/ /T/' -e s'/://' -e 's/ UTC/00Z/'`;
 echo "Build time was $BUILDTIME"
 
-echo -n "apt-get -y install " > temp_aptcmd
+echo -n "apt-get -y --force-yes install " > temp_aptcmd
 sed -e 's/^ //' -e 's/ (= /=/' -e 's/),\?$//' ${PACKAGE}_${VERSION}_${ARCH}.buildinfo | sed -n '/Build-Environment/,$p' | tail -n +2 | paste -s -d' ' >> temp_aptcmd
 
 # Try and extract the build time somehow...
@@ -37,15 +37,24 @@ SNAPSHOTURL=http://snapshot.debian.org/archive/debian/${BUILDTIME}/
 
 echo "Using the snapshot $SNAPSHOTURL"
 
+#echo "Press enter..."; read
+
 sudo pbuilder create --basetgz /var/cache/pbuilder/base.tgz --mirror $SNAPSHOTURL --distribution sid --debootstrapopts "--keyring=/usr/share/keyrings/debian-archive-keyring.gpg"
 
 sudo cp /var/cache/pbuilder/base.tgz /var/cache/pbuilder/base-reproducible.tgz
 
 # Update it
+#echo "Press enter to run chrootcommands..."; read
+
 sudo pbuilder --execute --save-after-exec --basetgz /var/cache/pbuilder/base-reproducible.tgz ../chrootcommands
+
+#echo "Press enter to run version adjustment..."; read
+
 sudo pbuilder --execute --save-after-exec --basetgz /var/cache/pbuilder/base-reproducible.tgz temp_aptcmd  # You could probably combine these.
 
 # Do the actual build
+#echo "Press enter to build..."; read
+
 sudo DEB_BUILD_OPTIONS=nocheck pbuilder --build --debbuildopts '-b' --basetgz /var/cache/pbuilder/base-reproducible.tgz $PACKAGE_*.dsc
 mkdir -p temp
 dcmd cp /var/cache/pbuilder/result/$PACKAGE_*.changes temp; 
@@ -55,5 +64,4 @@ echo "Comparing buildinfo files. Any output after this line is an error!"
 set +e
 
 diff -q ${PACKAGE}_*.buildinfo temp/${PACKAGE}_*.buildinfo
-cd ..
-echo $PACKAGE $? >> repro-log
+echo $PACKAGE $? >> ../repro-log
