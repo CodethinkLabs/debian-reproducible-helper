@@ -2,13 +2,22 @@
 
 This is a set of scripts which I've been using to automatically reproduce the results of [[https://reproducible.debian.net/]]. The goal is to see if I can build bit-for-bit copies of Debian's packages.
 
-
 1) Install pbuilder. For this to work, I've found that version 0.219 of pbuilder is required, which is available in debian unstable (at the time of writing)
+1) Patch pbuilder with the change shown here: https://anonscm.debian.org/cgit/pbuilder/pbuilder.git/commit/?id=81aa5b61afed5296a5845a3ccab81c390fda43b9. This is also included in the 'pbuilder-patch' file in this directory.
 1) Copy pbuilderrc to /root/.pbuilderrc.
 1) sudo mkdir /var/aptcache
-1) sudo ./packagebuilder <package name>
+1) sudo ./packagebuilder-wrapper <package name>
 
 For the package name, use one of the packages listed at https://reproducible.debian.net/unstable/amd64/index_all_abc.html (preferably, one of the ones that is marked as reproducible)
+
+This will write a result to "repro-log" in the current directory.
+
+# Patching debootstrap to cache packages
+
+This script recreates pbuilder environments using debootstrap for each package built. This can involve a lot of downloading (about 170MB per package). To fix this, it's possible to patch debootstrap so that it will cache files and check for local copies before downloading them. The patch 'debootstrap-patch' in this directory should be applied to /usr/share/debootstrap/functions to do this.
+
+
+
 
 
 
