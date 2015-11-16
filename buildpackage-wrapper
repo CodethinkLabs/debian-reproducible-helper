@@ -1,0 +1,4 @@
+./buildpackage $@
+code=$?
+echo -n "$1 $code " >> repro-log
+date >> repro-log
