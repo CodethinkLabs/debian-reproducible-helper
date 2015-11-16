@@ -39,29 +39,30 @@ echo "Using the snapshot $SNAPSHOTURL"
 
 #echo "Press enter..."; read
 
-sudo pbuilder create --basetgz /var/cache/pbuilder/base.tgz --mirror $SNAPSHOTURL --distribution sid --debootstrapopts "--keyring=/usr/share/keyrings/debian-archive-keyring.gpg"
+sudo pbuilder create --basetgz /var/cache/pbuilder/base.tgz --mirror $SNAPSHOTURL --distribution sid --debootstrapopts "--keyring=/usr/share/keyrings/debian-archive-keyring.gpg" || exit 10
 
 sudo cp /var/cache/pbuilder/base.tgz /var/cache/pbuilder/base-reproducible.tgz
 
 # Update it
 #echo "Press enter to run chrootcommands..."; read
 
-sudo pbuilder --execute --save-after-exec --basetgz /var/cache/pbuilder/base-reproducible.tgz ../chrootcommands
+sudo pbuilder --execute --save-after-exec --basetgz /var/cache/pbuilder/base-reproducible.tgz ../chrootcommands || exit 11
 
 #echo "Press enter to run version adjustment..."; read
 
-sudo pbuilder --execute --save-after-exec --basetgz /var/cache/pbuilder/base-reproducible.tgz temp_aptcmd  # You could probably combine these.
+sudo pbuilder --execute --save-after-exec --basetgz /var/cache/pbuilder/base-reproducible.tgz temp_aptcmd || exit 12 # You could probably combine these. 
 
 # Do the actual build
 #echo "Press enter to build..."; read
 
-sudo DEB_BUILD_OPTIONS=nocheck pbuilder --build --debbuildopts '-b' --basetgz /var/cache/pbuilder/base-reproducible.tgz ${PACKAGE}_*.dsc
+sudo DEB_BUILD_OPTIONS=nocheck pbuilder --build --debbuildopts '-b' --basetgz /var/cache/pbuilder/base-reproducible.tgz ${PACKAGE}_*.dsc || exit 13
 mkdir -p temp
-dcmd cp /var/cache/pbuilder/result/${PACKAGE}_*.changes temp; 
+dcmd cp /var/cache/pbuilder/result/${PACKAGE}_*.changes temp || exit 14
 
 echo "Comparing buildinfo files. Any output after this line is an error!"
 
 set +e
 
 diff -q ${PACKAGE}_*.buildinfo temp/${PACKAGE}_*.buildinfo
-echo $PACKAGE $? >> ../repro-log
+code=$?
+exit $code
