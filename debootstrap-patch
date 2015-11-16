@@ -1,0 +1,19 @@
+--- debootstrap-1.0.74/functions	2015-10-23 04:01:23.000000000 +0100
++++ debootstrap/functions	2015-11-16 12:17:53.463761933 +0000
+@@ -380,7 +380,16 @@
+ 		error 1 NOTPREDL "%s was not pre-downloaded" "${from#null:}"
+ 	elif [ "${from#http://}" != "$from" ] || [ "${from#ftp://}" != "$from" ]; then
+ 		# http/ftp mirror
++
++		local mypackage=`basename $from`;
++		if [ -f /var/aptcache/$mypackage ]; then
++			info RETRIEVING "Using file from cache"
++			cp /var/aptcache/$mypackage "$dest"
++			return 0
++		fi	
++
+ 		if wgetprogress -O "$dest" "$from"; then
++			cp "$dest" /var/aptcache/$mypackage
+ 			return 0
+ 		else
+ 			rm -f "$dest"
