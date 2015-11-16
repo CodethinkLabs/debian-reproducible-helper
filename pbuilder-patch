@@ -1,0 +1,12 @@
+--- pbuilder-0.219/pbuilder-createbuildenv	2015-09-28 12:55:22.000000000 +0100
++++ pbuilder/pbuilder-createbuildenv	2015-11-16 12:27:52.487611780 +0000
+@@ -95,7 +96,7 @@
+ log "I: upgrading packages"
+ mountproc
+ $TRAP umountproc_cleanbuildplace_trap exit sighup
+-$CHROOTEXEC /usr/bin/apt-get -q update
++$CHROOTEXEC /usr/bin/apt-get -q "${APTGETOPT[@]}" update
+ 
+ case "$(readlink -e "$PBUILDERSATISFYDEPENDSCMD")" in
+   *-aptitude)
+
