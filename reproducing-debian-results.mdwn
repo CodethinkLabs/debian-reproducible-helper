@@ -16,6 +16,17 @@ and it'll find the most recent version of debian before that time, in this case:
 
     http://snapshot.debian.org/archive/debian/20151028T043052Z/
 
+So, to start with, we find the result on reproducible.debian.org that we want to reproduce, and grab the buildinfo file, and scrape from the info page the time at which it was built. We can turn this into a url for snapshot.debian.org. We'll use the buildinfo file to verify our results later, as it contains the sha256sum of the files we're going to create.
+
 There's another problem though; this may be so old that it's out of date, and apt will refuse to use this repsitory. To get around that, you need to pass "-o Acquire::Check-Valid-Until=false" to apt... and unfortunately there's a bug in pbuilder which stops it from passing apt-get options (APTGETOPT in .pbuilderrc) onto the commands used to set up the chroot. https://anonscm.debian.org/cgit/pbuilder/pbuilder.git/commit/?id=81aa5b61afed5296a5845a3ccab81c390fda43b9 fixes this.
 
+Having created the pbuilder world, we then run the normal commands inside the chroot as per the Debian reproducible toolchain. Then there's a second step of using apt-get to install the exact versions of the software used in the buildinfo. Using the snapshot will have given us the right versions of most packages - but we have two repositories, the snapshot one and the special debian-reproducible one - and it's not always obvious which one is to be used. Using apt-get with all the versions scraped from the buildinfo file will fix this in most cases (and if it can't get the exact versions, it will at least report that rather than continuing and trying to build).
+
+Then we just run the build as per the normal build instructions. Our script will just check the generated buildinfo against the buildinfo downloaded from debian; if these match, then all the hashes of the binaries match, so we have a good result.
+
+# Optimisation
+
+One of the first problems is that we'll be downloading a lot of data from snapshots.debian.org to build a new chroot for each package. On reproducible.debian.org, they have one world which is continually updated, which does not take much bandwidth, but we'll be building things in arbitrary order, going back and forth in time so there's no gradual progression. This means we're pulling something like 170MB of software for each package, which adds up quickly. What we can do is to modify debootstrap so that it caches packages it's downloading; there isn't normally a facility to do this - although you can debootstrap from a local cache, you can't mix that with getting a set of packages from a http server at the moment - so I just added some extra code to check for filenames in a cache directory before going to http.
+
+# Results
 
