@@ -1,0 +1,21 @@
+# External reproduction of Debian Reproducible Builds
+
+For a while now some people at Debian (amongst other distributions) have been making a big effort to make builds of their packages bit-for-bit reproducible. There's an introduction to this at https://reproducible-builds.org/. Debian have achieved great results with this so far (82% of packages in Debian testing can now build reproducibly). It's easy to verify these results by running their experimental toolchain and building two copies of a package. However, I wanted to try and get not just a package that builds reproducibly locally, but to remake the exact same package that Debian's automated system built.
+
+This may be getting ahead of what's important right now - there are still a lot of packages which have problems building reproducibly, including some important ones like openssl. Understanding and fixing what makes packages unreproducible is the main focus at the moment. The ultimate goal however is be able to have several distributed sites building packages with some variety in their toolchain or host. So I've done this experiment to see how easy that is at the moment.
+
+# Dependency problems
+
+Debian-reproducible builds packages against the current testing (or unstable) version of Debian. This is a moving target. Once a package has been built twice and the outputs checked, the build system moves onto the next with a potentially updates set of dependency packages. I cannot repeat the same experiment a week later and expect to get bit-for-bit identical binaries because Debian testing will have moved on, giving different versions of libraries we need to build.
+
+The versions of the packages used are recorded in the buildinfo, but it isn't necessarily possible to get the exact version you want; the version used may not be in either testing or unstable at the time you want to run the test. The solution to that is to use snapshot.debian.org, which keeps a record of all the packages used in any debian distribution at any point in time. It can also be used as a repository when creating a pbuilder world. Handily, you can pass any time you like in a url like this:
+
+    http://snapshot.debian.org/archive/debian/20151028T053700Z/
+
+and it'll find the most recent version of debian before that time, in this case:
+
+    http://snapshot.debian.org/archive/debian/20151028T043052Z/
+
+There's another problem though; this may be so old that it's out of date, and apt will refuse to use this repsitory. To get around that, you need to pass "-o Acquire::Check-Valid-Until=false" to apt... and unfortunately there's a bug in pbuilder which stops it from passing apt-get options (APTGETOPT in .pbuilderrc) onto the commands used to set up the chroot. https://anonscm.debian.org/cgit/pbuilder/pbuilder.git/commit/?id=81aa5b61afed5296a5845a3ccab81c390fda43b9 fixes this.
+
+
