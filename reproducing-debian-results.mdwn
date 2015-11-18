@@ -30,3 +30,107 @@ One of the first problems is that we'll be downloading a lot of data from snapsh
 
 # Results
 
+Here's my first set of results:
+
+[[!table   data="""
+Package | Result | Test time |
+abicheck | 20151114193617 | Match  ||
+abootimg | 20151114194321 | Match ||
+abr2gbr | 20151114194917 | Match ||
+abs-guide | 20151114195457 | Match ||
+abstract-rendering | 20151114200157 | Match ||
+abtransfers | 20151114201029 | Match ||
+abx | 20151114201839 | Match ||
+accerciser | 20151114202802 | Match ||
+access-modifier-checker | 20151114203822 | SHA Mismatch ||
+accountsservice | 20151114204532 | Match ||
+acct | 20151114205145 | Match ||
+acepack | 20151114205838 | Match ||
+acetoneiso | 20151114210611 | Match ||
+acfax | 20151114211212 | Match ||
+acheck | 20151114211749 | Match ||
+acheck-rules | 20151114212326 | Match ||
+achilles | 20151114213025 | Match ||
+acidbase | 20151114213614 | Match ||
+ack-grep | 20151114215937 | SHA Mismatch ||
+acl | 20151114220534 | Match ||
+aclock.app | 20151114221259 | Match ||
+acm | 20151114221904 | Match ||
+aconnectgui | 20151114222636 | Match ||
+acorn | 20151114223252 | Match ||
+acorn-fdisk | 20151114223830 | Match ||
+acoustid-fingerprinter | 20151114224601 | Match ||
+acpi | 20151114225140 | Match ||
+acpi-call | 20151114225723 | ??? (13) ||
+acpi-support | 20151114230318 | Match ||
+acpid | 20151114230909 | Match ||
+acpitail | 20151114231458 | Match ||
+acpitool | 20151114232047 | Match ||
+acr | 20151114232635 | Match ||
+acr38 | 20151114233311 | Match ||
+acsccid | 20151114233312 | ??? (8) ||
+actdiag# | 20151114233312 | ??? (100) ||
+activemq-protobuf | 20151114234338 | SHA Mismatch ||
+activity-log-manager | 20151114234941 | Match ||
+ada-reference-manual | 20151115000003 | Match ||
+adanaxisgpl | 20151115001319 | Match ||
+adblock-plus+ | 20151115001319 | ??? (100) ||
+adblock-plus-element-hiding-helper | 20151115001923 | Match ||
+addresses-for-gnustep | 20151115002626 | Match ||
+adios | 20151115002627 | ??? (100) ||
+adjtimex | 20151115003213 | Match ||
+adlint | 20151115003829 | Match ||
+admesh | 20151115004415 | Match ||
+adminer | 20151115004948 | Match ||
+adns | 20151115005600 | Match ||
+adolc | 20151115010248 | Match ||
+adonthell | 20151115011053 | Match ||
+adonthell-data | 20151115011733 | Match ||
+adplay | 20151115012454 | Match ||
+adplug | 20151115013113 | Match ||
+adun.app | 20151115013919 | Match ||
+advancecomp | 20151115014530 | Match ||
+advene | 20151115015005 | Failed to find prerequisites ||
+adwaita-icon-theme | 20151115015959 | Match ||
+adzapper | 20151115020538 | Match ||
+aegean | 20151115021236 | SHA Mismatch ||
+aeolus | 20151115021905 | Match ||
+aephea | 20151115022447 | Match ||
+aes2501-wy | 20151115023058 | Match ||
+aesfix | 20151115023639 | Match ||
+aeskeyfind | 20151115024107 | Failed to find prerequisites ||
+aeskulap | 20151115024107 | ??? (8) ||
+aespipe | 20151115024647 | SHA Mismatch ||
+aether | 20151115025645 | SHA Mismatch ||
+aevol | 20151115030300 | Match ||
+aewan | 20151115030849 | SHA Mismatch ||
+aewm | 20151115031327 | Failed to find prerequisites ||
+aewm++ | 20151115031914 | Match ||
+afflib | 20151115032604 | Match ||
+afl | 20151115033223 | Match ||
+afl-cov | 20151115033223 | ??? (100) ||
+afterstep | 20151115034259 | SHA Mismatch ||
+afuse | 20151115034910 | Match ||
+agave# | 20151115034910 | ??? (100) ||
+agda | 20151115040448 | Match ||
+agda-stdlib | 20151115041340 | Match ||
+agedu | 20151115041931 | Match ||
+agenda.app | 20151115042622 | Match ||
+agg | 20151115043347 | Match ||
+aggregate | 20151115043935 | Match ||
+aglfn | 20151115044530 | Match ||
+agtl | 20151115045130 | Match ||
+aha | 20151115045707 | Match ||
+ahcpd | 20151115050246 | Match ||
+aiccu | 20151115050841 | Match ||
+aide | 20151115051305 | Failed to find prerequisites ||
+aiksaurus | 20151115052102 | Match ||
+aiocoap | 20151115052528 | Failed to find prerequisites ||
+aiopg# | 20151115052528 | ??? (100) ||
+aioredis | 20151115052955 | Failed to find prerequisites ||
+aioxmlrpc | 20151115053552 | Match ||
+aiozmq | 20151115054153 | Match ||
+air-quality-sensor | 20151115054744 | Match ||
+airport-utils | 20151115055544 | Match ||
+gcc-3.3 | 20151115124754 | Match ||
+"""]]
