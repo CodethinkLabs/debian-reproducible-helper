@@ -18,11 +18,11 @@ sudo chmod 777 reproducible
 cd reproducible
 
 # Figure out how debian built it.
-apt-get source --download-only $PACKAGE # But wait, what if they haven't built that version?
+apt-get source --download-only $PACKAGE || exit 17 # But wait, what if they haven't built that version?
 
 VERSION=`ls ${PACKAGE}_*.dsc | sed -e s/$PACKAGE\_// -e s/.dsc$//`
-wget https://reproducible.debian.net/buildinfo/unstable/amd64/${PACKAGE}_${VERSION}_${ARCH}.buildinfo -O ${PACKAGE}_${VERSION}_${ARCH}.buildinfo
-wget https://reproducible.debian.net/rb-pkg/unstable/${ARCH}/${PACKAGE}.html -O ${PACKAGE}.html
+wget https://reproducible.debian.net/buildinfo/unstable/amd64/${PACKAGE}_${VERSION}_${ARCH}.buildinfo -O ${PACKAGE}_${VERSION}_${ARCH}.buildinfo || exit 15
+wget https://reproducible.debian.net/rb-pkg/unstable/${ARCH}/${PACKAGE}.html -O ${PACKAGE}.html || exit 16
 
 BUILDTIME=`grep "span class=\"build-time\"" ${PACKAGE}.html | sed -e 's/^.*>at //' -e 's/<.*$//' -e 's/-//g' -e 's/ /T/' -e s'/://' -e 's/ UTC/00Z/'`;
 echo "Build time was $BUILDTIME"
