@@ -16,9 +16,9 @@ This will write a result to "repro-log" in the current directory.
 
 Results are temporarily at http://www.srimech.com/reproducible/ until they find a better home.
 
-# Technical details
+# Technical details / rationale
 
-There are more technical details in [reproducing-debian-results.mdwn](reproducing-debian-results.mdwn).
+There are more technical details and some of the reasons for doing this in [reproducing-debian-results.mdwn](reproducing-debian-results.mdwn).
 
 # Patching debootstrap to cache packages
 
