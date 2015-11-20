@@ -1,4 +1,5 @@
 ./buildpackage $@
 code=$?
-echo -n "$1 $code " >> repro-log
-date >> repro-log
+
+echo "$1,$code," `date -u +%Y%m%d%H%M%S` | ssh -i /home/jimmacrthur/.ssh/logger_rsa logger@node.srimech.com
+echo "$1 $code " `date` >> repro-log
