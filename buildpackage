@@ -1,6 +1,12 @@
 #!/bin/bash
 
-set -e
+###########################################################################
+# Looks up the package on reproducible.debian.net, uses that information to
+# generate a suitable pbuilder world and then builds the package inside it.
+# The return code is 0 on successful reproduction.
+
+# This script uses sudo (as debootstrap requires it), so should be called
+# with sudo to avoid password prompts.
 
 PACKAGE=$1
 ARCH=amd64
@@ -18,7 +24,7 @@ sudo chmod 777 reproducible
 cd reproducible
 
 # Figure out how debian built it.
-apt-get source --download-only $PACKAGE || exit 17 # But wait, what if they haven't built that version?
+apt-get source --download-only $PACKAGE || exit 17 # But what if they haven't built that version?
 
 VERSION=`ls ${PACKAGE}_*.dsc | sed -e s/$PACKAGE\_// -e s/.dsc$//`
 wget https://reproducible.debian.net/buildinfo/unstable/amd64/${PACKAGE}_${VERSION}_${ARCH}.buildinfo -O ${PACKAGE}_${VERSION}_${ARCH}.buildinfo || exit 15
@@ -30,38 +36,25 @@ echo "Build time was $BUILDTIME"
 echo -n "apt-get -y --force-yes install " > temp_aptcmd
 sed -e 's/^ //' -e 's/ (= /=/' -e 's/),\?$//' ${PACKAGE}_${VERSION}_${ARCH}.buildinfo | sed -n '/Build-Environment/,$p' | tail -n +2 | paste -s -d' ' >> temp_aptcmd
 
-# Try and extract the build time somehow...
-
 # Create a pbuilder world.
 SNAPSHOTURL=http://snapshot.debian.org/archive/debian/${BUILDTIME}/
 
 echo "Using the snapshot $SNAPSHOTURL"
-
-#echo "Press enter..."; read
 
 sudo pbuilder create --basetgz /var/cache/pbuilder/base.tgz --mirror $SNAPSHOTURL --distribution sid --debootstrapopts "--keyring=/usr/share/keyrings/debian-archive-keyring.gpg" || exit 10
 
 sudo cp /var/cache/pbuilder/base.tgz /var/cache/pbuilder/base-reproducible.tgz
 
 # Update it
-#echo "Press enter to run chrootcommands..."; read
-
 sudo pbuilder --execute --save-after-exec --basetgz /var/cache/pbuilder/base-reproducible.tgz ../chrootcommands || exit 11
-
-#echo "Press enter to run version adjustment..."; read
-
 sudo pbuilder --execute --save-after-exec --basetgz /var/cache/pbuilder/base-reproducible.tgz temp_aptcmd || exit 12 # You could probably combine these. 
 
 # Do the actual build
-#echo "Press enter to build..."; read
-
 sudo DEB_BUILD_OPTIONS=nocheck pbuilder --build --debbuildopts '-b' --basetgz /var/cache/pbuilder/base-reproducible.tgz ${PACKAGE}_*.dsc || exit 13
 mkdir -p temp
 dcmd cp /var/cache/pbuilder/result/${PACKAGE}_*.changes temp || exit 14
 
 echo "Comparing buildinfo files. Any output after this line is an error!"
-
-set +e
 
 diff -q ${PACKAGE}_*.buildinfo temp/${PACKAGE}_*.buildinfo
 code=$?
