@@ -14,7 +14,7 @@ This will write a result to "repro-log" in the current directory.
 
 # Results
 
-Results are temporarily at http://www.srimech.com/reproducible/ until they find a better home.
+Initial results are at http://reproducible.baserock.org/. The output is very simple at the moment, and I plan to add more details and some machine-readable data.
 
 # Technical details / rationale
 
