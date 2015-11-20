@@ -1,5 +1,12 @@
+#!/bin/bash
+
+# This script simply runs buildpackage and records the results.
 ./buildpackage $@
 code=$?
 
+# This is an example of logging to a remote server. The user 'logger' in this case has a custom shell
+# which just reads one line and logs it.
 echo "$1,$code," `date -u +%Y%m%d%H%M%S` | ssh -i /home/jimmacrthur/.ssh/logger_rsa logger@node.srimech.com
+
+# This logs the same information to a local file.
 echo "$1 $code " `date` >> repro-log
